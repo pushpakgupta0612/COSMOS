@@ -74,9 +74,14 @@
   }
 
   function runScan() {
-    if (!discoveredObjects.includes(selected)) discoveredObjects = [...discoveredObjects, selected];
+    const alreadyDiscovered = discoveredObjects.includes(selected);
+    if (!alreadyDiscovered) discoveredObjects = [...discoveredObjects, selected];
     const data = scienceData[selected];
-    missionMessage = data ? `Scan complete: ${selected} added to your discoveries.` : `Scan complete: ${selected} logged.`;
+    missionMessage = alreadyDiscovered
+      ? `Scan complete: ${selected} is already in your discovery log.`
+      : data
+        ? `Scan complete: ${selected} added to your discoveries.`
+        : `Scan complete: ${selected} logged.`;
     showCoordinates = true;
   }
 
@@ -734,5 +739,21 @@
     .scene-controls .control-chip { white-space: nowrap; }
     .scene-bottom { display: none; }
     .back-button { top: 69px; left: 20px; }
+    .object-panel { overflow-y: auto; overscroll-behavior: contain; }
+    .scene-controls { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  }
+  @media (max-width: 420px) {
+    .object-panel { width: min(220px, 64vw); right: 8px; bottom: 72px; padding: 12px; max-height: 48vh; }
+    .object-panel h2 { font-size: 22px; }
+    .object-description, .science-card p, .mission-card p { font-size: 10px; line-height: 1.45; }
+    .scene-controls { max-width: 39vw; max-height: 43vh; bottom: 18px; left: 8px; }
+    .control-chip { white-space: normal !important; line-height: 1.35; }
+    .scene-heading { left: 16px; right: 16px; }
+    .scene-heading p { max-width: 62vw; }
+    .landing { padding-left: 7vw; padding-right: 7vw; }
+    .landing-footer { gap: 10px; font-size: 7px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; }
   }
 </style>
